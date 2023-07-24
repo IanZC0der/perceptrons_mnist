@@ -30,7 +30,7 @@ class perceptron:
             self.weights = np.random.uniform(-0.05,
                                              0.05, (10, self.number_weights))
             for epoch in range(self.epoches):
-                for i in range(self.testing_examples):
+                for i in range(self.training_examples):
                     targets = np.zeros(10, int)
                     targets[int(self.training_data[i, 0])] = 1
                     outputs = np.dot(self.weights, self.training_data[i, 1:])
