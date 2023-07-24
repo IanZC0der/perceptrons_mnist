@@ -9,6 +9,7 @@ class multi_perceptrons:
         # read raw data
         self.training_data = self._read_data(training_data_file_name)
         self.testing_data = self._read_data(testing_data_file_name)
+        self.learning_rate = 0.1
         # number of epoches
         self.epoches = epoches
         # number of hidden neurons
@@ -23,7 +24,9 @@ class multi_perceptrons:
         # self.weights = np.random.uniform(-0.05,
         #                                  0.05, (10, self.number_weights))
         self.weights_ih = None
+        self.prev_change_weights_ih = None
         self.weights_ho = None
+        self.prev_change_weights_ho = None
         self.momentom = momentom
 
     def _read_data(self, file_name):
@@ -42,9 +45,12 @@ class multi_perceptrons:
             # we should add a bias weight
             self.number_weights_h = number_of_hidden + 1
             self.weights_ih = np.random.uniform(-0.05, 0.05,
-                                                (self.number_of_hidden, self.number_weights))
+                                                (number_of_hidden, self.number_weights))
             self.weights_ho = np.random.uniform(-0.05,
                                                 0.05, (10, self.number_weights_h))
+            self.prev_change_weights_ho = np.zeros((10, self.number_weights_h))
+            self.prev_change_weights_ih = np.zeros(
+                (number_of_hidden, self.number_weights))
             for epoch in range(self.epoches):
                 for i in range(self.training_examples):
                     # create an array of 0.1. The target output value for the perceptrons that should fire should be 0.9. 0.1 otherwise
@@ -58,8 +64,16 @@ class multi_perceptrons:
                         hidden_outputs, [1])
                     outputs = self._sigmoid(
                         np.dot(self.weights_ho, hidden_outputs))
+                    # calculate errors
                     output_errors = outputs * \
                         (1 - outputs) * (targets - outputs)
                     hidden_errors = hidden_outputs * \
                         (1 - hidden_outputs) * \
-                        np.dot(output_errors, self.weights_ho)
+                        np.dot(output_errors, self.weights_ho[:, :-1])
+                    # calculate weight changes
+                    current_weight_changes_ho = self.learning_rate * \
+                        np.outer(output_errors, hidden_outputs_append_ones) + \
+                        self.momentom * self.prev_change_weights_ho
+                    self.prev_change_weights_ho = current_weight_changes_ho
+                    current_weight_changes_ih = self.learning_rate * \
+                        np.outer(hidden_errors, self.training_data[i, :])
