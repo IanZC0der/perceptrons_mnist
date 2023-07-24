@@ -63,7 +63,7 @@ class multi_perceptrons:
                     hidden_outputs_append_ones = np.append(
                         hidden_outputs, [1])
                     outputs = self._sigmoid(
-                        np.dot(self.weights_ho, hidden_outputs))
+                        np.dot(self.weights_ho, hidden_outputs_append_ones))
                     # calculate errors
                     output_errors = outputs * \
                         (1 - outputs) * (targets - outputs)
