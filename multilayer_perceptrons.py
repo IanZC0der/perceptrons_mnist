@@ -101,8 +101,9 @@ class multi_perceptrons:
         This function is for calculating the accuracies. 
         '''
         # calculate the outputs
+        # append a column of bias neurons before calculating the final results
         outputs = self._sigmoid(np.dot(np.append(self._sigmoid(
-            np.dot(data[:, 1:], self.weights_ih.T), [1])), self.weights_ho.T))
+            np.dot(data[:, 1:], self.weights_ih.T)), np.ones((data.shape[0], 1)), axis=1), self.weights_ho.T))
         correct_number = 0
         for i in range(number_of_examples):
             # the correct result should be the index of the most responsive perceptron
