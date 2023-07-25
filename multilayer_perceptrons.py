@@ -28,6 +28,10 @@ class multi_perceptrons:
         self.weights_ho = None
         self.prev_change_weights_ho = None
         self.momentom = momentom
+        # hash table used to save the accuracies calculated after each epoch for each number of hidden neurons
+        # the the value is a list of two lists. The first list is saving training data accuracies. The second list
+        # is for saving testing data accuracies
+        self.results = {key: [[], []] for key in self.number_of_hidden_neurons}
 
     def _read_data(self, file_name):
         # read data from file and append a column bias neuron
@@ -81,3 +85,19 @@ class multi_perceptrons:
                         np.outer(hidden_errors, self.training_data[i, :])
                     self.prev_change_weights_ih = current_weight_changes_ih
                     self.weights_ih += current_weight_changes_ih
+
+    def _test(self, number_of_examples, data):
+        '''
+        This function is for calculating the accuracies. 
+        '''
+        # calculate the outputs
+        outputs = self._sigmoid(np.dot(np.append(self._sigmoid(
+            np.dot(data[:, 1:], self.weights_ih.T), [1])), self.weights_ho.T))
+        correct_number = 0
+        for i in range(number_of_examples):
+            # the correct result should be the index of the most responsive perceptron
+            index = np.argmax(outputs[i, :])
+            if index == int(data[i, 0]):
+                correct_number += 1
+        # return the accuracy
+        return correct_number/number_of_examples
