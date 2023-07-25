@@ -111,3 +111,32 @@ class multi_perceptrons:
                 correct_number += 1
         # return the accuracy
         return correct_number/number_of_examples
+
+    def plotting(self):
+        '''
+        Plot the accuracies for each number of hidden neurons.
+        '''
+        fig, axs = plt.subplots(3, sharex=True, sharey=True)
+        x_axis = np.arange(1, self.epoches + 1, 1)
+        for i in range(len(self.number_of_hidden_neurons)):
+            axs[i].plot(x_axis, self.results[self.number_of_hidden_neurons[i]]
+                        [0], color='r', label='train')
+            axs[i].plot(x_axis, self.results[self.number_of_hidden_neurons[i]]
+                        [1], color='g', label='test')
+
+        plt.ylabel("accuracy")
+        plt.xlabel("epoch")
+        plt.legend()
+        plt.show()
+
+
+def main():
+    training_file_name = "mnist_train.csv"
+    testing_file_name = "mnist_test.csv"
+    model = perceptron(training_file_name, testing_file_name)
+    model.train()
+    model.plotting()
+
+
+if __name__ == "__main__":
+    main()
