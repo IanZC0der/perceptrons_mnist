@@ -74,6 +74,10 @@ class multi_perceptrons:
                     current_weight_changes_ho = self.learning_rate * \
                         np.outer(output_errors, hidden_outputs_append_ones) + \
                         self.momentom * self.prev_change_weights_ho
+                    # update weights
                     self.prev_change_weights_ho = current_weight_changes_ho
+                    self.weights_ho += current_weight_changes_ho
                     current_weight_changes_ih = self.learning_rate * \
                         np.outer(hidden_errors, self.training_data[i, :])
+                    self.prev_change_weights_ih = current_weight_changes_ih
+                    self.weights_ih += current_weight_changes_ih
