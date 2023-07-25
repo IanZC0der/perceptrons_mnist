@@ -44,7 +44,7 @@ class multi_perceptrons:
         return data_set
 
     def _sigmoid(self, data_set):
-        return 1 / (1 + np.exp(data_set))
+        return 1 / (1 + np.exp(-1 * data_set))
 
     def train(self):
         for number_of_hidden in self.number_of_hidden_neurons:
