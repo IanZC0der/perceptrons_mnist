@@ -32,6 +32,8 @@ class multi_perceptrons:
         # the the value is a list of two lists. The first list is saving training data accuracies. The second list
         # is for saving testing data accuracies
         self.results = {key: [[], []] for key in self.number_of_hidden_neurons}
+        self.weights_trained = {key: [[], []]
+                                for key in self.number_of_hidden_neurons}
 
     def _read_data(self, file_name):
         # read data from file and append a column bias neuron
@@ -85,6 +87,14 @@ class multi_perceptrons:
                         np.outer(hidden_errors, self.training_data[i, :])
                     self.prev_change_weights_ih = current_weight_changes_ih
                     self.weights_ih += current_weight_changes_ih
+                # calculate the accuracy using the weights and raw data after each epoch
+                self.results[number_of_hidden][0].append(
+                    self._test(self.training_examples, self.training_data))
+                self.results[number_of_hidden][1].append(
+                    self._test(self.testing_examples, self.testing_data))
+            # save the weights after completing all the epoches
+            self.weights_trained[number_of_hidden] = [
+                self.weights_ih, self.weights_ho]
 
     def _test(self, number_of_examples, data):
         '''
