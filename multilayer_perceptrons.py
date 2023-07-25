@@ -32,7 +32,7 @@ class multi_perceptrons:
         # the the value is a list of two lists. The first list is saving training data accuracies. The second list
         # is for saving testing data accuracies
         self.results = {key: [[], []] for key in self.number_of_hidden_neurons}
-        self.weights_trained = {key: [[], []]
+        self.weights_trained = {key: []
                                 for key in self.number_of_hidden_neurons}
 
     def _read_data(self, file_name):
@@ -51,12 +51,12 @@ class multi_perceptrons:
             # we should add a bias weight
             self.number_weights_h = number_of_hidden + 1
             self.weights_ih = np.random.uniform(-0.05, 0.05,
-                                                (number_of_hidden, self.number_weights))
+                                                (number_of_hidden, self.number_weights_i))
             self.weights_ho = np.random.uniform(-0.05,
                                                 0.05, (10, self.number_weights_h))
             self.prev_change_weights_ho = np.zeros((10, self.number_weights_h))
             self.prev_change_weights_ih = np.zeros(
-                (number_of_hidden, self.number_weights))
+                (number_of_hidden, self.number_weights_i))
             for epoch in range(self.epoches):
                 for i in range(self.training_examples):
                     # create an array of 0.1. The target output value for the perceptrons that should fire should be 0.9. 0.1 otherwise
